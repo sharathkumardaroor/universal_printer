@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "universal-printer"
+version = "2.0.0"
+authors = [
+    {name = "Sharath Kumar Daroor", email = "sharathkumardaroor@gmail.com"},
+]
+description = "Universal cross-platform printer supporting text and all file types with PDF fallback - pure Python standard library"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Printing",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = ["printing", "pdf", "cross-platform", "documents"]
+
+[project.urls]
+"Homepage" = "https://github.com/yourusername/universal-printer"
+"Bug Reports" = "https://github.com/yourusername/universal-printer/issues"
+"Source" = "https://github.com/yourusername/universal-printer"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"

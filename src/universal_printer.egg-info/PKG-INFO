@@ -1,0 +1,268 @@
+Metadata-Version: 2.4
+Name: universal-printer
+Version: 2.0.0
+Summary: Universal cross-platform printer supporting text and all file types with PDF fallback - pure Python standard library
+Author-email: Sharath Kumar Daroor <sharathkumardaroor@gmail.com>
+License-Expression: MIT
+Project-URL: Homepage, https://github.com/yourusername/universal-printer
+Project-URL: Bug Reports, https://github.com/yourusername/universal-printer/issues
+Project-URL: Source, https://github.com/yourusername/universal-printer
+Keywords: printing,pdf,cross-platform,documents
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Printing
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
+
+# Universal Printer
+
+A powerful cross-platform document printing library supporting text and all file types with PDF fallback, using only Python's standard library.
+
+## Features
+
+- **Universal File Support**: Print any file type (PDF, DOC, TXT, images, HTML, etc.)
+- **Cross-platform**: Works on Windows, macOS, and Linux
+- **Dependency-free**: Uses only Python standard library
+- **Smart PDF fallback**: Automatically creates a PDF if printing fails
+- **File type detection**: Automatic MIME type detection and handling
+- **Simple API**: Easy to use with minimal setup
+- **Multiple convenience methods**: `print_text()`, `print_file()`, `print_document()`
+
+## Installation
+
+```bash
+pip install universal-printer
+```
+
+## Quick Start
+
+```python
+from universal_printer import DocumentPrinter
+
+# Create printer instance
+printer = DocumentPrinter()
+
+# Print text content
+success, message, pdf_path = printer.print_text(
+    "Hello, World!\nThis is a test document.",
+    fallback_to_pdf=True
+)
+
+# Print any file type
+success, message, pdf_path = printer.print_file(
+    "/path/to/document.pdf",  # or .docx, .jpg, .html, etc.
+    fallback_to_pdf=True
+)
+
+if success:
+    print("Document printed successfully!")
+else:
+    print(f"Printing failed: {message}")
+    if pdf_path:
+        print(f"PDF fallback saved to: {pdf_path}")
+```
+
+## Supported File Types
+
+The library can handle any file type, with optimized support for:
+
+- **Documents**: `.pdf`, `.doc`, `.docx`, `.rtf`, `.odt`
+- **Text files**: `.txt`, `.csv`, `.json`, `.xml`, `.html`, `.htm`
+- **Images**: `.jpg`, `.jpeg`, `.png`, `.gif`, `.bmp`, `.tiff`
+- **Any other file type**: Will attempt to print or create PDF representation
+
+## API Reference
+
+### DocumentPrinter
+
+#### `__init__()`
+Creates a new DocumentPrinter instance with automatic file type detection.
+
+#### `print_document(content_or_path, printer_name=None, fallback_to_pdf=True, pdf_filename=None)`
+Universal method to print text content or any file type.
+
+**Parameters:**
+- `content_or_path` (str): Text content or path to any file type
+- `printer_name` (str, optional): Name of printer to use, or "PDF" for print-to-PDF
+- `fallback_to_pdf` (bool): Create PDF if printing fails (default: True)
+- `pdf_filename` (str, optional): Custom filename for PDF fallback
+
+**Returns:**
+- `tuple`: (success: bool, message: str, pdf_path: str or None)
+
+#### `print_text(text, printer_name=None, fallback_to_pdf=True, pdf_filename=None)`
+Convenience method specifically for printing text content.
+
+#### `print_file(file_path, printer_name=None, fallback_to_pdf=True, pdf_filename=None)`
+Convenience method specifically for printing files.
+
+#### `get_supported_file_types()`
+Returns set of file extensions optimized for direct printing.
+
+#### `is_file_printable(file_path)`
+Check if a file type is directly supported for printing.
+
+## Examples
+
+### Print Text Content
+
+```python
+from universal_printer import DocumentPrinter
+
+printer = DocumentPrinter()
+
+# Simple text printing
+success, msg, pdf = printer.print_text("Hello, World!")
+print(f"Result: {success}, Message: {msg}")
+
+# Multi-line text with custom PDF name
+text_content = """
+Invoice #12345
+Date: 2024-01-01
+Amount: $100.00
+Thank you for your business!
+"""
+success, msg, pdf = printer.print_text(
+    text_content,
+    pdf_filename="invoice_12345.pdf"
+)
+```
+
+### Print Various File Types
+
+```python
+# Print a PDF document
+success, msg, pdf = printer.print_file("/path/to/document.pdf")
+
+# Print a Word document
+success, msg, pdf = printer.print_file("/path/to/report.docx")
+
+# Print an image
+success, msg, pdf = printer.print_file("/path/to/photo.jpg")
+
+# Print HTML file
+success, msg, pdf = printer.print_file("/path/to/webpage.html")
+
+# Print CSV data
+success, msg, pdf = printer.print_file("/path/to/data.csv")
+```
+
+### Advanced Usage
+
+```python
+# Check if file type is supported
+if printer.is_file_printable("/path/to/document.pdf"):
+    print("PDF files are directly printable")
+
+# Get all supported file types
+supported_types = printer.get_supported_file_types()
+print(f"Supported types: {supported_types}")
+
+# Print to specific printer
+success, msg, pdf = printer.print_document(
+    "Important memo",
+    printer_name="HP_LaserJet_Pro"
+)
+
+# Print to PDF (bypass physical printer)
+success, msg, pdf = printer.print_document(
+    "Save as PDF",
+    printer_name="PDF",
+    pdf_filename="saved_document.pdf"
+)
+```
+
+### Error Handling and File Detection
+
+```python
+# The library automatically detects file types
+success, msg, pdf = printer.print_file("unknown_file.xyz")
+# Will attempt to print or create PDF representation
+
+# Handle binary files gracefully
+success, msg, pdf = printer.print_file("/path/to/program.exe")
+# Creates PDF with file information for binary files
+
+# Disable PDF fallback for testing
+success, msg, pdf = printer.print_text(
+    "Print or fail",
+    fallback_to_pdf=False
+)
+if not success:
+    print("Printing failed and no PDF was created")
+```
+
+## Platform-Specific Behavior
+
+### Windows
+- Uses `rundll32.exe` with shell print verb for all file types
+- Falls back to Notepad for text files if needed
+- Supports "Microsoft Print to PDF" printer
+- Handles Office documents, images, and PDFs natively
+
+### macOS/Linux
+- Uses `lp` command (CUPS) for all file types
+- Supports print-to-PDF with CUPS
+- Handles various file formats through system print drivers
+- Requires printer to be configured in system
+
+## File Type Detection
+
+The library includes intelligent file type detection:
+
+- **MIME type detection**: Automatic detection using Python's `mimetypes`
+- **Extension-based fallback**: Uses file extensions when MIME detection fails
+- **Binary file handling**: Creates descriptive PDF for non-text binary files
+- **Encoding detection**: Handles various text encodings (UTF-8, Latin-1)
+
+## PDF Fallback Features
+
+Enhanced PDF fallback system:
+
+- **Smart content handling**: Different handling for text vs binary files
+- **File information**: Includes file metadata in PDF for binary files
+- **Improved formatting**: Better text layout and formatting
+- **Error recovery**: Multiple fallback levels for maximum reliability
+
+## Requirements
+
+- Python 3.7+
+- No external dependencies
+- Works on Windows, macOS, and Linux
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Changelog
+
+### 2.0.0
+- **MAJOR UPDATE**: Universal file type support
+- Added support for all file types (PDF, DOC, images, etc.)
+- New convenience methods: `print_text()`, `print_file()`
+- Automatic file type detection and MIME type handling
+- Enhanced PDF fallback with better formatting
+- Improved error handling and binary file support
+- Better cross-platform compatibility
+- Added file type checking utilities
+
+### 0.1.0
+- Initial release
+- Basic cross-platform printing
+- PDF fallback functionality
+- Support for text content and existing files

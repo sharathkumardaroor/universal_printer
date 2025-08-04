@@ -1,0 +1,12 @@
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+src/universal_printer/__init__.py
+src/universal_printer/document_printer.py
+src/universal_printer.egg-info/PKG-INFO
+src/universal_printer.egg-info/SOURCES.txt
+src/universal_printer.egg-info/dependency_links.txt
+src/universal_printer.egg-info/top_level.txt
+tests/__init__.py
+tests/test_document_printer.py
